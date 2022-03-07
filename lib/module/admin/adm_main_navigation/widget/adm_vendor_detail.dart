@@ -1,0 +1,236 @@
+import 'package:barber_app/core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+
+class AdmVendorDetail extends StatefulWidget {
+  final String vendorId;
+  final Map vendor;
+
+  AdmVendorDetail({
+    this.vendorId,
+    this.vendor,
+  });
+
+  @override
+  _AdmVendorDetailState createState() => _AdmVendorDetailState();
+}
+
+class _AdmVendorDetailState extends State<AdmVendorDetail> {
+  Map user;
+
+  loadData() async {
+    var userSnapshot = await FirebaseFirestore.instance
+        .collection(collection.userDataCollection)
+        .doc(widget.vendorId)
+        .get();
+    user = userSnapshot.data();
+
+    if (user == null) {
+      user = {
+        "profile": {
+          "display_name": "Dummy Data",
+          "email": "dummy-data@gmail.com",
+        }
+      };
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (user == null) return Container();
+    return Container(
+      child: FireStreamDocument(
+        stream: FirebaseFirestore.instance
+            .collection(collection.vendorCollection)
+            .doc(widget.vendorId)
+            .snapshots(),
+        onSnapshot: (snapshot) {
+          var vendor = snapshot.data();
+          vendor["id"] = snapshot.id;
+
+          return Card(
+            elevation: 0.4,
+            child: Container(
+              padding: EdgeInsets.all(16.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  // Image.network(src)
+                  Container(
+                    height: 120.0,
+                    width: 120.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8.0),
+                      ),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          vendor["photo_url"],
+                        ),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 16.0,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text("Owner:"),
+                        Text(
+                          "${user["profile"]["display_name"]}",
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "${user["profile"]["email"]}",
+                          style: TextStyle(
+                            fontSize: 12.0,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 16.0,
+                        ),
+                        //Vendor Detail
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text("Vendor:"),
+                              Text(
+                                vendor["vendor_name"],
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                vendor["status"] ?? "Pending",
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 8.0,
+                              ),
+                              Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      FirebaseFirestore.instance
+                                          .collection(collection.vendorCollection)
+                                          .doc(widget.vendorId)
+                                          .update({
+                                        "status": "Banned",
+                                      });
+                                      print("Banned!");
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 14.0,
+                                      backgroundColor: Colors.purple[900],
+                                      child: Icon(
+                                        Icons.block,
+                                        color: Colors.white,
+                                        size: 14.0,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 6.0,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      FirebaseFirestore.instance
+                                          .collection(collection.vendorCollection)
+                                          .doc(widget.vendorId)
+                                          .update({
+                                        "status": "Rejected",
+                                      });
+                                      print("Rejected!");
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 14.0,
+                                      backgroundColor: Colors.red[900],
+                                      child: Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                        size: 14.0,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 6.0),
+                                  InkWell(
+                                    onTap: () {
+                                      FirebaseFirestore.instance
+                                          .collection(collection.vendorCollection)
+                                          .doc(widget.vendorId)
+                                          .update({
+                                        "status": "Pending",
+                                      });
+                                      print("Pending!");
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 14.0,
+                                      backgroundColor: Colors.yellow[900],
+                                      child: Icon(
+                                        Icons.lock_clock,
+                                        color: Colors.white,
+                                        size: 14.0,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 6.0,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      FirebaseFirestore.instance
+                                          .collection(collection.vendorCollection)
+                                          .doc(widget.vendorId)
+                                          .update({
+                                        "status": "Approved",
+                                      });
+                                      print("Approved!");
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 14.0,
+                                      backgroundColor: Colors.green[900],
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                        size: 14.0,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                        //
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

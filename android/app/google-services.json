@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "667268188130",
+    "project_id": "universalcutz-c046f",
+    "storage_bucket": "universalcutz-c046f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:667268188130:android:d86f3d79d7a99aa9261bbb",
+        "android_client_info": {
+          "package_name": "com.example.your_app_name"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "667268188130-95e5snkbos9dr10af913q80q1ahdcrik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPjEMnLbKsBQTRI_IOPO7eiOfnA_m6v6U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "667268188130-95e5snkbos9dr10af913q80q1ahdcrik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
